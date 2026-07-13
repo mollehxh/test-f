@@ -10,11 +10,12 @@ import {
   MoreHorizontal,
   Pencil,
   Plus,
+  Settings,
   Trash2,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
@@ -60,6 +61,7 @@ export function FactorySidebar({
   const [editingId, setEditingId] = React.useState<string | null>(null)
   const [draftName, setDraftName] = React.useState("")
   const [deleteTarget, setDeleteTarget] = React.useState<Factory | null>(null)
+  const [updateHover, setUpdateHover] = React.useState(false)
 
   const runAction = (key: ActionKey) => {
     if (running) return
@@ -82,32 +84,45 @@ export function FactorySidebar({
   return (
     <aside className="flex h-full w-72 shrink-0 flex-col border-r border-border bg-sidebar">
       <div className="flex flex-col gap-1 px-3 pt-5">
-        <ActionButton
-          icon={running === "mail" ? Loader2 : MailCheck}
-          label="Обработать почту"
-          spinning={running === "mail"}
+        <Button
+          variant="ghost"
           onClick={() => runAction("mail")}
-        />
-        <ActionButton
-          icon={running === "archive" ? Loader2 : Archive}
-          label="Архивировать"
-          spinning={running === "archive"}
+          className="w-full justify-start gap-3 px-2"
+        >
+          {running === "mail" ? (
+            <Loader2 className="animate-spin" />
+          ) : (
+            <MailCheck />
+          )}
+          <span className="flex-1 text-left">Обработать почту</span>
+        </Button>
+        <Button
+          variant="ghost"
           onClick={() => runAction("archive")}
-        />
+          className="w-full justify-start gap-3 px-2"
+        >
+          {running === "archive" ? (
+            <Loader2 className="animate-spin" />
+          ) : (
+            <Archive />
+          )}
+          <span className="flex-1 text-left">Архивировать</span>
+        </Button>
       </div>
 
       <div className="mt-5 flex items-center justify-between px-5 pb-1">
         <p className="text-xs font-medium tracking-wide text-muted-foreground">
           Заводы
         </p>
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="icon-xs"
           onClick={onAdd}
           aria-label="Добавить завод"
-          className="flex size-5 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          className="text-muted-foreground"
         >
-          <Plus className="size-4" />
-        </button>
+          <Plus />
+        </Button>
       </div>
 
       <ScrollArea className="min-h-0 flex-1 px-3 pb-3">
@@ -143,32 +158,33 @@ export function FactorySidebar({
                   isActive ? "bg-accent" : "hover:bg-accent/60",
                 )}
               >
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
                   onClick={() => onSelect(factory.id)}
                   aria-current={isActive ? "page" : undefined}
                   className={cn(
-                    "flex min-w-0 flex-1 items-center gap-3 rounded-2xl px-2 py-1.5 text-sm",
+                    "h-9 min-w-0 flex-1 justify-start gap-3 px-2 hover:bg-transparent",
                     isActive
                       ? "font-medium text-foreground"
-                      : "text-foreground/80",
+                      : "font-normal text-foreground/80",
                   )}
                 >
-                  <Folder className="size-4 shrink-0 text-muted-foreground" />
+                  <Folder className="text-muted-foreground" />
                   <span className="min-w-0 flex-1 truncate text-left">
                     {factory.name}
                   </span>
-                </button>
+                </Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger
                     render={
-                      <button
-                        type="button"
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
                         aria-label={`Меню завода ${factory.name}`}
-                        className="mr-1 flex size-7 shrink-0 items-center justify-center rounded-lg text-muted-foreground opacity-0 transition-opacity hover:bg-background hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100 data-[popup-open]:opacity-100"
+                        className="mr-1 text-muted-foreground opacity-0 transition-opacity focus-visible:opacity-100 group-hover:opacity-100 data-[popup-open]:opacity-100"
                       >
-                        <MoreHorizontal className="size-4" />
-                      </button>
+                        <MoreHorizontal />
+                      </Button>
                     }
                   />
                   <DropdownMenuContent align="end" className="w-44">
@@ -192,36 +208,36 @@ export function FactorySidebar({
       </ScrollArea>
 
       <div className="flex items-center gap-1 border-t border-border px-3 py-3">
-        <button
-          type="button"
+        <Button
+          variant="ghost"
           onClick={onOpenSettings}
-          className="flex min-w-0 flex-1 items-center gap-2 rounded-2xl px-1.5 py-1.5 text-left transition-colors hover:bg-accent"
+          className="min-w-0 flex-1 justify-start gap-3 px-2"
         >
-          <Avatar className="size-7">
-            <AvatarFallback className="text-xs">Н</AvatarFallback>
-          </Avatar>
-          <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
-            Никита
-          </span>
-        </button>
-        <button
-          type="button"
-          aria-label={
-            updateAvailable ? "Доступно обновление" : "Обновлений нет"
-          }
-          title={updateAvailable ? "Доступно обновление" : "Обновлений нет"}
-          className={cn(
-            "relative flex size-8 shrink-0 items-center justify-center rounded-2xl transition-colors",
-            updateAvailable
-              ? "text-foreground hover:bg-accent"
-              : "text-muted-foreground hover:bg-accent hover:text-foreground",
-          )}
-        >
-          <Download className="size-4" />
-          {updateAvailable ? (
-            <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-foreground ring-2 ring-sidebar" />
-          ) : null}
-        </button>
+          <Settings />
+          <span className="flex-1 truncate text-left">Настройки</span>
+        </Button>
+        {updateAvailable ? (
+          <Button
+            aria-label="Обновить"
+            onMouseEnter={() => setUpdateHover(true)}
+            onMouseLeave={() => setUpdateHover(false)}
+            onFocus={() => setUpdateHover(true)}
+            onBlur={() => setUpdateHover(false)}
+            className="gap-0 overflow-hidden rounded-full p-0"
+          >
+            <span className="flex size-8 shrink-0 items-center justify-center">
+              <Download />
+            </span>
+            <span
+              className={cn(
+                "overflow-hidden whitespace-nowrap transition-all duration-150 ease-out",
+                updateHover ? "max-w-24 pr-3.5 opacity-100" : "max-w-0 opacity-0",
+              )}
+            >
+              Обновить
+            </span>
+          </Button>
+        ) : null}
       </div>
 
       <AlertDialog
@@ -253,28 +269,5 @@ export function FactorySidebar({
         </AlertDialogContent>
       </AlertDialog>
     </aside>
-  )
-}
-
-function ActionButton({
-  icon: Icon,
-  label,
-  spinning,
-  onClick,
-}: {
-  icon: React.ComponentType<{ className?: string }>
-  label: string
-  spinning?: boolean
-  onClick: () => void
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="flex w-full items-center gap-3 rounded-2xl px-2 py-1.5 text-sm font-medium text-foreground/90 transition-colors hover:bg-accent hover:text-foreground"
-    >
-      <Icon className={cn("size-4", spinning && "animate-spin")} />
-      <span className="flex-1 text-left">{label}</span>
-    </button>
   )
 }
