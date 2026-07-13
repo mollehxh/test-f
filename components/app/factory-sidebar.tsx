@@ -221,8 +221,7 @@ export function FactorySidebar({
             onMouseLeave={() => setUpdateHover(false)}
             onFocus={() => setUpdateHover(true)}
             onBlur={() => setUpdateHover(false)}
-            className="size-8 min-w-8 gap-0 overflow-hidden rounded-full bg-blue-500 p-0 text-white transition-all duration-150 ease-out hover:bg-blue-400 data-[expanded=true]:w-auto"
-            data-expanded={updateHover}
+            className="h-8 min-w-8 gap-0 overflow-hidden rounded-full bg-blue-500 p-0 text-white transition-colors duration-150 ease-out hover:bg-blue-400"
           >
             <span className="flex size-8 shrink-0 items-center justify-center">
               <Download />
