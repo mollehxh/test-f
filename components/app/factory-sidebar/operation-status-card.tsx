@@ -2,15 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
-export function OperationStatusCard({
-  label,
-  progress,
-  onPause,
-}: {
+type Props = {
   label: string;
   progress: number;
-  onPause: () => void;
-}) {
+  onStop: () => void;
+};
+
+export function OperationStatusCard(props: Props) {
+  const { label, progress, onStop } = props;
+
   return (
     <Card
       size="sm"
@@ -21,7 +21,7 @@ export function OperationStatusCard({
           type="button"
           variant="ghost"
           size="icon-xs"
-          onClick={onPause}
+          onClick={onStop}
           aria-label="Остановить операцию"
           className="shrink-0 rounded-full text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
         >

@@ -1,57 +1,39 @@
 "use client";
 
 import * as React from "react";
-import { MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import type { Factory } from "@/components/app/factory-data";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   SidebarGroup,
   SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarInput,
   SidebarMenu,
-  SidebarMenuAction,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { DeleteFactoryDialog } from "./delete-factory-dialog";
+import { FactoryListItem } from "./factory-list-item";
+import { FactoryRenameItem } from "./factory-rename-item";
 
-export function FactoryList({
-  factories,
-  activeId,
-  onSelect,
-  onRename,
-  onDelete,
-  onAdd,
-}: {
+type Props = {
   factories: Factory[];
   activeId: string;
   onSelect: (id: string) => void;
   onRename: (id: string, name: string) => void;
   onDelete: (id: string) => void;
   onAdd: () => Factory;
-}) {
+};
+
+export const FactoryList = React.memo(function FactoryList(props: Props) {
+  const { factories, activeId, onSelect, onRename, onDelete, onAdd } = props;
+
   const [editingId, setEditingId] = React.useState<string | null>(null);
   const [draftName, setDraftName] = React.useState("");
   const [deleteTarget, setDeleteTarget] = React.useState<Factory | null>(null);
+  const cancelRenameRef = React.useRef(false);
 
   const startRename = (factory: Factory) => {
+    cancelRenameRef.current = false;
     setEditingId(factory.id);
     setDraftName(factory.name);
   };
@@ -63,9 +45,25 @@ export function FactoryList({
   const commitRename = () => {
     if (!editingId) return;
 
+    if (cancelRenameRef.current) {
+      cancelRenameRef.current = false;
+      return;
+    }
+
     const trimmed = draftName.trim();
     if (trimmed) onRename(editingId, trimmed);
     setEditingId(null);
+    setDraftName("");
+  };
+
+  const cancelRename = () => {
+    cancelRenameRef.current = true;
+    setEditingId(null);
+    setDraftName("");
+  };
+
+  const closeDeleteDialog = () => {
+    setDeleteTarget(null);
   };
 
   return (
@@ -83,108 +81,36 @@ export function FactoryList({
 
               if (isEditing) {
                 return (
-                  <SidebarMenuItem key={factory.id}>
-                    <SidebarInput
-                      autoFocus
-                      value={draftName}
-                      onFocus={(event) => event.currentTarget.select()}
-                      onChange={(event) => setDraftName(event.target.value)}
-                      onBlur={commitRename}
-                      onKeyDown={(event) => {
-                        if (
-                          event.nativeEvent.isComposing ||
-                          event.keyCode === 229
-                        ) {
-                          return;
-                        }
-
-                        if (event.key === "Enter") commitRename();
-                        if (event.key === "Escape") setEditingId(null);
-                      }}
-                      aria-label="Название завода"
-                      className="h-8"
-                    />
-                  </SidebarMenuItem>
+                  <FactoryRenameItem
+                    key={factory.id}
+                    value={draftName}
+                    onChange={setDraftName}
+                    onCommit={commitRename}
+                    onCancel={cancelRename}
+                  />
                 );
               }
 
               return (
-                <SidebarMenuItem
+                <FactoryListItem
                   key={factory.id}
-                  className="rounded-xl transition-colors hover:bg-sidebar-accent has-[[aria-expanded=true]]:bg-sidebar-accent"
-                >
-                  <SidebarMenuButton
-                    onClick={() => onSelect(factory.id)}
-                    isActive={isActive}
-                    aria-current={isActive ? "page" : undefined}
-                  >
-                    <span>{factory.name}</span>
-                  </SidebarMenuButton>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger
-                      render={
-                        <SidebarMenuAction
-                          aria-label={`Меню завода ${factory.name}`}
-                          showOnHover
-                          className="hover:bg-sidebar dark:hover:bg-white/10"
-                        >
-                          <MoreHorizontal />
-                        </SidebarMenuAction>
-                      }
-                    />
-                    <DropdownMenuContent
-                      side="right"
-                      align="start"
-                      className="w-44"
-                    >
-                      <DropdownMenuItem onClick={() => startRename(factory)}>
-                        <Pencil className="size-4" />
-                        Переименовать
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        variant="destructive"
-                        onClick={() => setDeleteTarget(factory)}
-                      >
-                        <Trash2 className="size-4" />
-                        Удалить
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </SidebarMenuItem>
+                  factory={factory}
+                  isActive={isActive}
+                  onSelect={onSelect}
+                  onRename={startRename}
+                  onDelete={setDeleteTarget}
+                />
               );
             })}
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
 
-      <AlertDialog
-        open={deleteTarget !== null}
-        onOpenChange={(open) => {
-          if (!open) setDeleteTarget(null);
-        }}
-      >
-        <AlertDialogContent size="sm">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Удалить завод?</AlertDialogTitle>
-            <AlertDialogDescription>
-              {deleteTarget
-                ? `Завод «${deleteTarget.name}» будет удалён без возможности восстановления.`
-                : ""}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Отмена</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                if (deleteTarget) onDelete(deleteTarget.id);
-                setDeleteTarget(null);
-              }}
-            >
-              Удалить
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DeleteFactoryDialog
+        factory={deleteTarget}
+        onClose={closeDeleteDialog}
+        onConfirm={onDelete}
+      />
     </>
   );
-}
+});

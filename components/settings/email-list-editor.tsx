@@ -1,39 +1,58 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Plus, X } from "lucide-react"
+import * as React from "react";
+import { Plus, X } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-export function EmailListEditor({
-  values,
-  onChange,
-  placeholder = "name@example.com",
-  emptyText = "Пока нет ни одного адреса.",
-}: {
-  values: string[]
-  onChange: (values: string[]) => void
-  placeholder?: string
-  emptyText?: string
-}) {
-  const [draft, setDraft] = React.useState("")
+type Props = {
+  values: string[];
+  onChange: (values: string[]) => void;
+  placeholder?: string;
+  emptyText?: string;
+};
+
+export function EmailListEditor(props: Props) {
+  const {
+    values,
+    onChange,
+    placeholder = "name@example.com",
+    emptyText = "Пока нет ни одного адреса.",
+  } = props;
+
+  const [draft, setDraft] = React.useState("");
 
   const add = React.useCallback(() => {
-    const value = draft.trim()
-    if (!value) return
+    const value = draft.trim();
+    if (!value) return;
     if (values.includes(value)) {
-      setDraft("")
-      return
+      setDraft("");
+      return;
     }
-    onChange([...values, value])
-    setDraft("")
-  }, [draft, values, onChange])
+    onChange([...values, value]);
+    setDraft("");
+  }, [draft, values, onChange]);
 
   const remove = (value: string) => {
-    onChange(values.filter((item) => item !== value))
-  }
+    onChange(values.filter((item) => item !== value));
+  };
+
+  const handleDraftChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDraft(event.target.value);
+  };
+
+  const handleDraftKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.nativeEvent.isComposing || event.keyCode === 229) {
+      return;
+    }
+
+    if (event.key === "Enter") {
+      event.preventDefault();
+      add();
+    }
+  };
 
   return (
     <div className="space-y-3">
@@ -41,14 +60,8 @@ export function EmailListEditor({
         <Input
           type="email"
           value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.nativeEvent.isComposing || e.keyCode === 229) return
-            if (e.key === "Enter") {
-              e.preventDefault()
-              add()
-            }
-          }}
+          onChange={handleDraftChange}
+          onKeyDown={handleDraftKeyDown}
           placeholder={placeholder}
           className="h-9 flex-1 rounded-2xl border border-border bg-transparent"
         />
@@ -89,5 +102,5 @@ export function EmailListEditor({
         <p className="text-sm text-muted-foreground">{emptyText}</p>
       )}
     </div>
-  )
+  );
 }

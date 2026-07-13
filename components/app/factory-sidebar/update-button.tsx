@@ -1,37 +1,20 @@
-"use client";
-
-import * as React from "react";
+import { memo } from "react";
 import { Download } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-export function UpdateButton() {
-  const [isExpanded, setIsExpanded] = React.useState(false);
-
+export const UpdateButton = memo(function UpdateButton() {
   return (
     <Button
       aria-label="Обновить"
-      onMouseEnter={() => setIsExpanded(true)}
-      onMouseLeave={() => setIsExpanded(false)}
-      onFocus={() => setIsExpanded(true)}
-      onBlur={() => setIsExpanded(false)}
-      className={cn(
-        "h-8 min-w-8 shrink-0 gap-0 overflow-hidden rounded-full bg-blue-500 p-0 text-white transition-[max-width,background-color] duration-150 ease-out hover:bg-blue-400",
-        isExpanded ? "max-w-32" : "max-w-8",
-      )}
+      className="group h-8 max-w-8 min-w-8 shrink-0 gap-0 overflow-hidden rounded-full bg-blue-500 p-0 text-white transition-[max-width,background-color] duration-150 ease-out hover:max-w-32 hover:bg-blue-400 focus:max-w-32"
     >
       <span className="flex size-8 shrink-0 items-center justify-center">
         <Download />
       </span>
-      <span
-        className={cn(
-          "overflow-hidden whitespace-nowrap text-sm transition-all duration-150 ease-out",
-          isExpanded ? "max-w-24 pr-3.5 opacity-100" : "max-w-0 opacity-0",
-        )}
-      >
+      <span className="max-w-0 overflow-hidden whitespace-nowrap text-sm opacity-0 transition-all duration-150 ease-out group-hover:max-w-24 group-hover:pr-3.5 group-hover:opacity-100 group-focus:max-w-24 group-focus:pr-3.5 group-focus:opacity-100">
         Обновить
       </span>
     </Button>
   );
-}
+});

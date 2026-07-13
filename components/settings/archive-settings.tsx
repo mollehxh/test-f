@@ -1,54 +1,45 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Info, Plus, Trash2 } from "lucide-react"
+import * as React from "react";
+import { Info, Plus, Trash2 } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import {
-  SettingsPanel,
-  SettingsSection,
-} from "@/components/settings/settings-primitives"
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { SettingsPanel } from "@/components/settings/settings-panel";
+import { SettingsSection } from "@/components/settings/settings-section";
 
 type Rule = {
-  id: string
-  mask: string
-}
+  id: string;
+  mask: string;
+};
 
 const DEFAULT_RULES: Rule[] = [
   { id: "r1", mask: "log/Error.txt" },
   { id: "r2", mask: "log/Param_2*" },
   { id: "r3", mask: "accrue/**" },
   { id: "r4", mask: "results/*.spc" },
-]
-
-let ruleCounter = 0
-function nextRuleId() {
-  ruleCounter += 1
-  return `rule-${Date.now()}-${ruleCounter}`
-}
+];
 
 export function ArchiveSettings() {
-  const [rules, setRules] = React.useState<Rule[]>(DEFAULT_RULES)
+  const [rules, setRules] = React.useState<Rule[]>(DEFAULT_RULES);
 
   const updateRule = (id: string, mask: string) => {
-    setRules((prev) => prev.map((rule) => (rule.id === id ? { ...rule, mask } : rule)))
-  }
+    setRules((prev) =>
+      prev.map((rule) => (rule.id === id ? { ...rule, mask } : rule)),
+    );
+  };
 
   const removeRule = (id: string) => {
-    setRules((prev) => prev.filter((rule) => rule.id !== id))
-  }
+    setRules((prev) => prev.filter((rule) => rule.id !== id));
+  };
 
   const addRule = () => {
-    setRules((prev) => [...prev, { id: nextRuleId(), mask: "" }])
-  }
+    setRules((prev) => [...prev, { id: crypto.randomUUID(), mask: "" }]);
+  };
 
   return (
-    <SettingsPanel
-      title="Обработка архивов"
-      // description="Правила определяют, какие файлы и папки из распакованного архива переносятся в результаты."
-    >
+    <SettingsPanel title="Обработка архивов">
       <SettingsSection
         title="Правила извлечения"
         description="Правила определяют, какие файлы и папки из распакованного архива переносятся в результаты. Каждое правило — путь или glob-маска. Переносятся только совпавшие файлы и папки."
@@ -104,5 +95,5 @@ export function ArchiveSettings() {
         </div>
       </SettingsSection>
     </SettingsPanel>
-  )
+  );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Archive, Loader2, MailCheck, Settings } from "lucide-react";
+import { Archive, MailCheck, Settings } from "lucide-react";
 
 import type { Factory } from "@/components/app/factory-data";
 import {
@@ -14,21 +14,13 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { FactoryList } from "./factory-list";
+import { OperationActionButton } from "./operation-action-button";
 import { OperationStatusCard } from "./operation-status-card";
 import { UpdateButton } from "./update-button";
 
 type ActionKey = "mail" | "archive";
 
-export function FactorySidebar({
-  factories,
-  activeId,
-  onSelect,
-  onRename,
-  onDelete,
-  onAdd,
-  onOpenSettings,
-  updateAvailable = true,
-}: {
+type Props = {
   factories: Factory[];
   activeId: string;
   onSelect: (id: string) => void;
@@ -36,8 +28,23 @@ export function FactorySidebar({
   onDelete: (id: string) => void;
   onAdd: () => Factory;
   onOpenSettings: () => void;
+  onPreloadSettings: () => void;
   updateAvailable?: boolean;
-}) {
+};
+
+export function FactorySidebar(props: Props) {
+  const {
+    factories,
+    activeId,
+    onSelect,
+    onRename,
+    onDelete,
+    onAdd,
+    onOpenSettings,
+    onPreloadSettings,
+    updateAvailable = true,
+  } = props;
+
   const [running, setRunning] = React.useState<ActionKey | null>(null);
   const [progress, setProgress] = React.useState(0);
 
@@ -84,38 +91,32 @@ export function FactorySidebar({
     setProgress(0);
   };
 
+  const runMailAction = () => {
+    runAction("mail");
+  };
+
+  const runArchiveAction = () => {
+    runAction("archive");
+  };
+
   return (
     <Sidebar collapsible="none" className="w-72 border-r border-sidebar-border">
       <SidebarHeader className="pt-5">
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              onClick={() => runAction("mail")}
-              disabled={running !== null && running !== "mail"}
-              aria-busy={running === "mail"}
-            >
-              {running === "mail" ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                <MailCheck />
-              )}
-              <span>Обработать почту</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              onClick={() => runAction("archive")}
-              disabled={running !== null && running !== "archive"}
-              aria-busy={running === "archive"}
-            >
-              {running === "archive" ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                <Archive />
-              )}
-              <span>Архивировать</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          <OperationActionButton
+            label="Обработать почту"
+            icon={MailCheck}
+            isRunning={running === "mail"}
+            disabled={running !== null && running !== "mail"}
+            onClick={runMailAction}
+          />
+          <OperationActionButton
+            label="Архивировать"
+            icon={Archive}
+            isRunning={running === "archive"}
+            disabled={running !== null && running !== "archive"}
+            onClick={runArchiveAction}
+          />
         </SidebarMenu>
       </SidebarHeader>
 
@@ -135,14 +136,18 @@ export function FactorySidebar({
           <OperationStatusCard
             label={running === "mail" ? "Обработка почты" : "Архивация файлов"}
             progress={progress}
-            onPause={stopAction}
+            onStop={stopAction}
           />
         ) : null}
 
         <div className="flex items-center gap-2">
           <SidebarMenu className="min-w-0 flex-1">
             <SidebarMenuItem>
-              <SidebarMenuButton onClick={onOpenSettings}>
+              <SidebarMenuButton
+                onClick={onOpenSettings}
+                onMouseEnter={onPreloadSettings}
+                onFocus={onPreloadSettings}
+              >
                 <Settings />
                 <span>Настройки</span>
               </SidebarMenuButton>

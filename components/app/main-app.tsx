@@ -3,23 +3,25 @@
 import * as React from "react";
 import { Factory as FactoryIcon } from "lucide-react";
 
-import { FactorySidebar } from "@/components/app/factory-sidebar";
 import { FactoryChart } from "@/components/app/factory-chart";
 import { INITIAL_FACTORIES, type Factory } from "@/components/app/factory-data";
+import { FactorySidebar } from "@/components/app/factory-sidebar/factory-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
-let factoryCounter = 0;
-function nextFactoryId() {
-  factoryCounter += 1;
-  return `factory-${Date.now()}-${factoryCounter}`;
-}
+type Props = {
+  onOpenSettings: () => void;
+  onPreloadSettings: () => void;
+};
 
-export function MainApp({ onOpenSettings }: { onOpenSettings: () => void }) {
+export function MainApp(props: Props) {
+  const { onOpenSettings, onPreloadSettings } = props;
+
   const [factories, setFactories] =
     React.useState<Factory[]>(INITIAL_FACTORIES);
   const [activeId, setActiveId] = React.useState<string>(
     INITIAL_FACTORIES[0]?.id ?? "",
   );
+  const factoryNumberRef = React.useRef(INITIAL_FACTORIES.length);
 
   const activeFactory =
     factories.find((factory) => factory.id === activeId) ?? null;
@@ -43,14 +45,15 @@ export function MainApp({ onOpenSettings }: { onOpenSettings: () => void }) {
   };
 
   const handleAdd = () => {
-    const id = nextFactoryId();
+    factoryNumberRef.current += 1;
+
     const factory = {
-      id,
-      name: `Новый завод ${factories.length + 1}`,
+      id: crypto.randomUUID(),
+      name: `Новый завод ${factoryNumberRef.current}`,
     };
 
     setFactories((prev) => [...prev, factory]);
-    setActiveId(id);
+    setActiveId(factory.id);
 
     return factory;
   };
@@ -65,6 +68,7 @@ export function MainApp({ onOpenSettings }: { onOpenSettings: () => void }) {
         onDelete={handleDelete}
         onAdd={handleAdd}
         onOpenSettings={onOpenSettings}
+        onPreloadSettings={onPreloadSettings}
       />
       {activeFactory ? (
         <FactoryChart factory={activeFactory} />

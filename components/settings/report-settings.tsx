@@ -1,46 +1,48 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
-import { Badge } from "@/components/ui/badge"
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import {
-  FieldRow,
-  SettingsPanel,
-  SettingsSection,
-} from "@/components/settings/settings-primitives"
-import { EmailListEditor } from "@/components/settings/email-list-editor"
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { EmailListEditor } from "@/components/settings/email-list-editor";
+import { FieldRow } from "@/components/settings/field-row";
+import { SettingsPanel } from "@/components/settings/settings-panel";
+import { SettingsSection } from "@/components/settings/settings-section";
 
 const VARIABLES: { token: string; description: string }[] = [
-  { token: "{{period}}", description: "Период, к которому относятся проблемные архивы" },
+  {
+    token: "{{period}}",
+    description: "Период, к которому относятся проблемные архивы",
+  },
   { token: "{{problemCount}}", description: "Количество найденных проблем" },
-  { token: "{{processedCount}}", description: "Количество успешно обработанных архивов" },
+  {
+    token: "{{processedCount}}",
+    description: "Количество успешно обработанных архивов",
+  },
   {
     token: "{{problemArchives}}",
-    description: "Список отсутствующих или необработанных архивов (для текста письма)",
+    description:
+      "Список отсутствующих или необработанных архивов (для текста письма)",
   },
-]
+];
 
-const SUBJECT_DEFAULT = "Проблемы обработки архивов за {{period}}"
+const SUBJECT_DEFAULT = "Проблемы обработки архивов за {{period}}";
 
 const BODY_DEFAULT = `За период {{period}} обнаружено проблем: {{problemCount}}.
 Успешно обработано архивов: {{processedCount}}.
 
 Проблемные архивы:
-{{problemArchives}}`
+{{problemArchives}}`;
 
 export function ReportSettings() {
-  const [recipients, setRecipients] = React.useState<string[]>([])
-  const [subject, setSubject] = React.useState(SUBJECT_DEFAULT)
-  const [body, setBody] = React.useState(BODY_DEFAULT)
+  const [recipients, setRecipients] = React.useState<string[]>([]);
+  const [subject, setSubject] = React.useState(SUBJECT_DEFAULT);
+  const [body, setBody] = React.useState(BODY_DEFAULT);
 
   return (
-    <SettingsPanel
-      title="Отчёт"
-      // description="Черновик отчёта создаётся только если архив отсутствует или произошла ошибка обработки. Если проблем нет, письмо не создаётся."
-    >
+    <SettingsPanel title="Отчёт">
       <SettingsSection
         title="Получатели"
         description="Адреса, которым адресуется черновик отчёта о проблемах."
@@ -124,5 +126,5 @@ export function ReportSettings() {
         </Card>
       </SettingsSection>
     </SettingsPanel>
-  )
+  );
 }
