@@ -84,30 +84,30 @@ export function FactorySidebar({
   return (
     <aside className="flex h-full w-72 shrink-0 flex-col border-r border-border bg-sidebar">
       <div className="flex flex-col gap-1 px-3 pt-5">
-        <Button
-          variant="ghost"
+        <button
+          type="button"
           onClick={() => runAction("mail")}
-          className="h-9 w-full justify-start gap-3 px-2 font-normal text-foreground/80 hover:text-foreground"
+          className="flex w-full items-center gap-2 rounded-2xl px-2 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
         >
           {running === "mail" ? (
-            <Loader2 className="animate-spin text-muted-foreground" />
+            <Loader2 className="size-4 animate-spin" />
           ) : (
-            <MailCheck className="text-muted-foreground" />
+            <MailCheck className="size-4" />
           )}
-          <span className="flex-1 text-left">Обработать почту</span>
-        </Button>
-        <Button
-          variant="ghost"
+          Обработать почту
+        </button>
+        <button
+          type="button"
           onClick={() => runAction("archive")}
-          className="h-9 w-full justify-start gap-3 px-2 font-normal text-foreground/80 hover:text-foreground"
+          className="flex w-full items-center gap-2 rounded-2xl px-2 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
         >
           {running === "archive" ? (
-            <Loader2 className="animate-spin text-muted-foreground" />
+            <Loader2 className="size-4 animate-spin" />
           ) : (
-            <Archive className="text-muted-foreground" />
+            <Archive className="size-4" />
           )}
-          <span className="flex-1 text-left">Архивировать</span>
-        </Button>
+          Архивировать
+        </button>
       </div>
 
       <div className="mt-5 flex items-center justify-between px-5 pb-1">
@@ -206,14 +206,14 @@ export function FactorySidebar({
       </ScrollArea>
 
       <div className="flex items-center gap-1 border-t border-border px-3 py-3">
-        <Button
-          variant="ghost"
+        <button
+          type="button"
           onClick={onOpenSettings}
-          className="h-9 min-w-0 flex-1 justify-start gap-3 px-2 font-normal text-foreground/80 hover:text-foreground"
+          className="flex min-w-0 flex-1 items-center gap-2 rounded-2xl px-2 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
         >
-          <Settings className="text-muted-foreground" />
+          <Settings className="size-4 shrink-0" />
           <span className="flex-1 truncate text-left">Настройки</span>
-        </Button>
+        </button>
         {updateAvailable ? (
           <Button
             aria-label="Обновить"
