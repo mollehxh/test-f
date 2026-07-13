@@ -87,24 +87,24 @@ export function FactorySidebar({
         <Button
           variant="ghost"
           onClick={() => runAction("mail")}
-          className="w-full justify-start gap-3 px-2"
+          className="h-9 w-full justify-start gap-3 px-2 font-normal text-foreground/80 hover:text-foreground"
         >
           {running === "mail" ? (
-            <Loader2 className="animate-spin" />
+            <Loader2 className="animate-spin text-muted-foreground" />
           ) : (
-            <MailCheck />
+            <MailCheck className="text-muted-foreground" />
           )}
           <span className="flex-1 text-left">Обработать почту</span>
         </Button>
         <Button
           variant="ghost"
           onClick={() => runAction("archive")}
-          className="w-full justify-start gap-3 px-2"
+          className="h-9 w-full justify-start gap-3 px-2 font-normal text-foreground/80 hover:text-foreground"
         >
           {running === "archive" ? (
-            <Loader2 className="animate-spin" />
+            <Loader2 className="animate-spin text-muted-foreground" />
           ) : (
-            <Archive />
+            <Archive className="text-muted-foreground" />
           )}
           <span className="flex-1 text-left">Архивировать</span>
         </Button>
@@ -163,10 +163,8 @@ export function FactorySidebar({
                   onClick={() => onSelect(factory.id)}
                   aria-current={isActive ? "page" : undefined}
                   className={cn(
-                    "h-9 min-w-0 flex-1 justify-start gap-3 px-2 hover:bg-transparent",
-                    isActive
-                      ? "font-medium text-foreground"
-                      : "font-normal text-foreground/80",
+                    "h-9 min-w-0 flex-1 justify-start gap-3 px-2 font-normal hover:bg-transparent hover:text-foreground",
+                    isActive ? "text-foreground" : "text-foreground/80",
                   )}
                 >
                   <Folder className="text-muted-foreground" />
@@ -211,9 +209,9 @@ export function FactorySidebar({
         <Button
           variant="ghost"
           onClick={onOpenSettings}
-          className="min-w-0 flex-1 justify-start gap-3 px-2"
+          className="h-9 min-w-0 flex-1 justify-start gap-3 px-2 font-normal text-foreground/80 hover:text-foreground"
         >
-          <Settings />
+          <Settings className="text-muted-foreground" />
           <span className="flex-1 truncate text-left">Настройки</span>
         </Button>
         {updateAvailable ? (
@@ -223,14 +221,14 @@ export function FactorySidebar({
             onMouseLeave={() => setUpdateHover(false)}
             onFocus={() => setUpdateHover(true)}
             onBlur={() => setUpdateHover(false)}
-            className="gap-0 overflow-hidden rounded-full p-0"
+            className="h-8 gap-0 overflow-hidden rounded-full bg-blue-600 p-0 text-white hover:bg-blue-500"
           >
             <span className="flex size-8 shrink-0 items-center justify-center">
               <Download />
             </span>
             <span
               className={cn(
-                "overflow-hidden whitespace-nowrap transition-all duration-150 ease-out",
+                "overflow-hidden whitespace-nowrap text-sm transition-all duration-150 ease-out",
                 updateHover ? "max-w-24 pr-3.5 opacity-100" : "max-w-0 opacity-0",
               )}
             >
