@@ -39,7 +39,7 @@ export function ReportSettings() {
   return (
     <SettingsPanel
       title="Отчёт"
-      description="Черновик отчёта создаётся только если архив отсутствует или произошла ошибка обработки. Если проблем нет, письмо не создаётся."
+      // description="Черновик отчёта создаётся только если архив отсутствует или произошла ошибка обработки. Если проблем нет, письмо не создаётся."
     >
       <SettingsSection
         title="Получатели"
@@ -57,7 +57,8 @@ export function ReportSettings() {
 
       <SettingsSection
         title="Шаблоны письма"
-        description="Тема и текст черновика отчёта. Используйте переменные из списка ниже."
+        description="Тема и текст черновика отчёта. Используйте переменные из списка ниже.
+        "
       >
         <Card className="gap-0 divide-y divide-border overflow-hidden py-0">
           <FieldRow

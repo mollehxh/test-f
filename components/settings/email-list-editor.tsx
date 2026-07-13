@@ -55,7 +55,7 @@ export function EmailListEditor({
         <Button
           type="button"
           variant="outline"
-          size="sm"
+          size="lg"
           onClick={add}
           disabled={!draft.trim()}
           className="rounded-2xl"

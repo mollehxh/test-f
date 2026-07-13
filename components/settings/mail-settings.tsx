@@ -25,7 +25,7 @@ export function MailSettings() {
   return (
     <SettingsPanel
       title="Почта"
-      description="Настройте подключение к почтовому ящику и определите, какие входящие письма считаются источником архивов."
+      // description="Настройте подключение к почтовому ящику и определите, какие входящие письма считаются источником архивов."
     >
       <SettingsSection
         title="Подключение к IMAP"
@@ -34,7 +34,7 @@ export function MailSettings() {
         <Card className="gap-0 divide-y divide-border overflow-hidden py-0">
           <FieldRow
             title="IMAP-сервер"
-            description="Адрес сервера входящей почты"
+            // description="Адрес сервера входящей почты"
             htmlFor="imap-host"
             control={
               <Input
@@ -48,7 +48,7 @@ export function MailSettings() {
           />
           <FieldRow
             title="Порт IMAP-сервера"
-            description="Обычно 993 для соединения по SSL"
+            // description="Обычно 993 для соединения по SSL"
             htmlFor="imap-port"
             control={
               <Input

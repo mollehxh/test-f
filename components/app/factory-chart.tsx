@@ -32,9 +32,6 @@ export function FactoryChart({ factory }: { factory: Factory }) {
         <h1 className="text-2xl font-semibold tracking-tight text-foreground text-balance">
           {factory.name}
         </h1>
-        <p className="text-sm text-muted-foreground">
-          Спектр сигнала · {CHANNEL_COUNT} каналов
-        </p>
       </header>
 
       <Card className="flex min-h-0 flex-1 flex-col overflow-hidden p-4 sm:p-6">
@@ -104,10 +101,7 @@ export function FactoryChart({ factory }: { factory: Factory }) {
             />
           </AreaChart>
         </ChartContainer>
-        <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
-          <span>Канал 1</span>
-          <span>Канал {CHANNEL_COUNT}</span>
-        </div>
+
       </Card>
     </div>
   )
