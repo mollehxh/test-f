@@ -3,8 +3,8 @@ import { createRoot } from "react-dom/client";
 import "@fontsource-variable/inter";
 
 import { App } from "@/app/app";
-import { AppProviders } from "@/app/providers/app-providers";
 import "@/app/styles/globals.css";
+import { TooltipProvider } from "@/shared/ui/tooltip";
 
 const rootElement = document.getElementById("root");
 
@@ -14,8 +14,8 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <AppProviders>
+    <TooltipProvider>
       <App />
-    </AppProviders>
+    </TooltipProvider>
   </StrictMode>,
 );
