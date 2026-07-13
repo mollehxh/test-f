@@ -40,9 +40,11 @@ const NAV_GROUPS: NavGroup[] = [
 export function SettingsSidebar({
   active,
   onSelect,
+  onBack,
 }: {
   active: string
   onSelect: (id: string) => void
+  onBack?: () => void
 }) {
   const [query, setQuery] = React.useState("")
 
@@ -62,6 +64,7 @@ export function SettingsSidebar({
       <div className="px-3 pt-5">
         <button
           type="button"
+          onClick={onBack}
           className="flex w-full items-center gap-2 rounded-2xl px-2 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
         >
           <ArrowLeft className="size-4" />
