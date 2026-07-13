@@ -1,6 +1,7 @@
 import * as React from "react";
+import { ThemeProvider, useTheme } from "next-themes";
 
-import { ThemeProvider, useTheme } from "@/shared/lib/theme";
+import { TooltipProvider } from "@/shared/ui/tooltip";
 
 type Props = {
   children: React.ReactNode;
@@ -10,9 +11,17 @@ export function AppProviders(props: Props) {
   const { children } = props;
 
   return (
-    <ThemeProvider>
-      <ThemeHotkey />
-      {children}
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+      storageKey="factory-flow-theme"
+    >
+      <TooltipProvider>
+        <ThemeHotkey />
+        {children}
+      </TooltipProvider>
     </ThemeProvider>
   );
 }

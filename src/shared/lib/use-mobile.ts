@@ -8,16 +8,14 @@ export function useIsMobile() {
   );
 
   React.useEffect(() => {
-    const mediaQuery = window.matchMedia(
-      `(max-width: ${MOBILE_BREAKPOINT - 1}px)`,
-    );
-    const update = () => setIsMobile(mediaQuery.matches);
-
-    mediaQuery.addEventListener("change", update);
-    update();
-
-    return () => mediaQuery.removeEventListener("change", update);
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    const onChange = () => {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    };
+    mql.addEventListener("change", onChange);
+    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    return () => mql.removeEventListener("change", onChange);
   }, []);
 
-  return Boolean(isMobile);
+  return !!isMobile;
 }

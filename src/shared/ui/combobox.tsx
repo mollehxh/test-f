@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
+import { Combobox as ComboboxPrimitive } from "@base-ui/react";
 
-import { cn } from "@/shared/lib/cn";
+import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import {
   InputGroup,
@@ -38,14 +38,12 @@ function ComboboxClear({ className, ...props }: ComboboxPrimitive.Clear.Props) {
   return (
     <ComboboxPrimitive.Clear
       data-slot="combobox-clear"
+      render={<InputGroupButton variant="ghost" size="icon-xs" />}
       className={cn(className)}
       {...props}
-      render={
-        <InputGroupButton variant="ghost" size="icon-xs">
-          <XIcon className="pointer-events-none" />
-        </InputGroupButton>
-      }
-    />
+    >
+      <XIcon className="pointer-events-none" />
+    </ComboboxPrimitive.Clear>
   );
 }
 
@@ -151,11 +149,11 @@ function ComboboxItem({
       {children}
       <ComboboxPrimitive.ItemIndicator
         render={
-          <span className="pointer-events-none absolute right-2 flex size-4 items-center justify-center">
-            <CheckIcon className="pointer-events-none" />
-          </span>
+          <span className="pointer-events-none absolute right-2 flex size-4 items-center justify-center" />
         }
-      />
+      >
+        <CheckIcon className="pointer-events-none" />
+      </ComboboxPrimitive.ItemIndicator>
     </ComboboxPrimitive.Item>
   );
 }
@@ -252,14 +250,12 @@ function ComboboxChip({
       {children}
       {showRemove && (
         <ComboboxPrimitive.ChipRemove
+          render={<Button variant="ghost" size="icon-xs" />}
           className="-ml-0.5 size-4.5 opacity-50 hover:opacity-100 aria-disabled:pointer-events-none"
           data-slot="combobox-chip-remove"
-          render={
-            <Button variant="ghost" size="icon-xs">
-              <XIcon className="pointer-events-none" />
-            </Button>
-          }
-        />
+        >
+          <XIcon className="pointer-events-none" />
+        </ComboboxPrimitive.ChipRemove>
       )}
     </ComboboxPrimitive.Chip>
   );

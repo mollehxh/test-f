@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ContextMenu as ContextMenuPrimitive } from "@base-ui/react/context-menu";
 
-import { cn } from "@/shared/lib/cn";
+import { cn } from "@/shared/lib/utils";
 import { ChevronRightIcon, CheckIcon } from "lucide-react";
 
 function ContextMenu({ ...props }: ContextMenuPrimitive.Root.Props) {
@@ -135,7 +135,7 @@ function ContextMenuSubTrigger({
       {...props}
     >
       {children}
-      <ChevronRightIcon className="cn-rtl-flip ml-auto" />
+      <ChevronRightIcon className="ml-auto" />
     </ContextMenuPrimitive.SubmenuTrigger>
   );
 }

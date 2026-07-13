@@ -2,7 +2,7 @@ import * as React from "react";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 
-import { cn } from "@/shared/lib/cn";
+import { cn } from "@/shared/lib/utils";
 import { ChevronRightIcon, MoreHorizontalIcon } from "lucide-react";
 
 function Breadcrumb({ className, ...props }: React.ComponentProps<"nav">) {
@@ -85,7 +85,7 @@ function BreadcrumbSeparator({
       className={cn("[&>svg]:size-3.5", className)}
       {...props}
     >
-      {children ?? <ChevronRightIcon className="cn-rtl-flip" />}
+      {children ?? <ChevronRightIcon />}
     </li>
   );
 }

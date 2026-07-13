@@ -1,3 +1,4 @@
+import { useTheme } from "next-themes";
 import { Toaster as Sonner, type ToasterProps } from "sonner";
 import {
   CircleCheckIcon,
@@ -7,10 +8,8 @@ import {
   Loader2Icon,
 } from "lucide-react";
 
-import { useTheme } from "@/shared/lib/theme";
-
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme } = useTheme();
+  const { theme = "system" } = useTheme();
 
   return (
     <Sonner

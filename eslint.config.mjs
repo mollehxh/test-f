@@ -25,9 +25,15 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/shared/ui/**/*.{ts,tsx}", "src/shared/lib/theme.tsx"],
+    files: ["src/shared/ui/**/*.{ts,tsx}"],
     rules: {
       "react-refresh/only-export-components": "off",
+    },
+  },
+  {
+    files: ["src/shared/lib/use-mobile.ts", "src/shared/ui/carousel.tsx"],
+    rules: {
+      "react-hooks/set-state-in-effect": "off",
     },
   },
 ]);

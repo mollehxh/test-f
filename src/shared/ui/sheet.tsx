@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog";
 
-import { cn } from "@/shared/lib/cn";
+import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { XIcon } from "lucide-react";
 
@@ -65,12 +65,12 @@ function SheetContent({
                 variant="ghost"
                 className="absolute top-4 right-4 bg-secondary"
                 size="icon-sm"
-              >
-                <XIcon />
-                <span className="sr-only">Close</span>
-              </Button>
+              />
             }
-          />
+          >
+            <XIcon />
+            <span className="sr-only">Close</span>
+          </SheetPrimitive.Close>
         )}
       </SheetPrimitive.Popup>
     </SheetPortal>

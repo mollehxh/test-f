@@ -3,7 +3,7 @@ import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
 
-import { cn } from "@/shared/lib/cn";
+import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
@@ -56,39 +56,14 @@ function Carousel({
     },
     plugins,
   );
-  const subscribe = React.useCallback(
-    (onStoreChange: () => void) => {
-      if (!api) return () => undefined;
+  const [canScrollPrev, setCanScrollPrev] = React.useState(false);
+  const [canScrollNext, setCanScrollNext] = React.useState(false);
 
-      api.on("reInit", onStoreChange);
-      api.on("select", onStoreChange);
-
-      return () => {
-        api.off("reInit", onStoreChange);
-        api.off("select", onStoreChange);
-      };
-    },
-    [api],
-  );
-
-  const getCanScrollPrev = React.useCallback(
-    () => api?.canScrollPrev() ?? false,
-    [api],
-  );
-  const getCanScrollNext = React.useCallback(
-    () => api?.canScrollNext() ?? false,
-    [api],
-  );
-  const canScrollPrev = React.useSyncExternalStore(
-    subscribe,
-    getCanScrollPrev,
-    () => false,
-  );
-  const canScrollNext = React.useSyncExternalStore(
-    subscribe,
-    getCanScrollNext,
-    () => false,
-  );
+  const onSelect = React.useCallback((api: CarouselApi) => {
+    if (!api) return;
+    setCanScrollPrev(api.canScrollPrev());
+    setCanScrollNext(api.canScrollNext());
+  }, []);
 
   const scrollPrev = React.useCallback(() => {
     api?.scrollPrev();
@@ -115,6 +90,17 @@ function Carousel({
     if (!api || !setApi) return;
     setApi(api);
   }, [api, setApi]);
+
+  React.useEffect(() => {
+    if (!api) return;
+    onSelect(api);
+    api.on("reInit", onSelect);
+    api.on("select", onSelect);
+
+    return () => {
+      api?.off("select", onSelect);
+    };
+  }, [api, onSelect]);
 
   return (
     <CarouselContext.Provider
@@ -207,7 +193,7 @@ function CarouselPrevious({
       onClick={scrollPrev}
       {...props}
     >
-      <ChevronLeftIcon className="cn-rtl-flip" />
+      <ChevronLeftIcon />
       <span className="sr-only">Previous slide</span>
     </Button>
   );
@@ -237,7 +223,7 @@ function CarouselNext({
       onClick={scrollNext}
       {...props}
     >
-      <ChevronRightIcon className="cn-rtl-flip" />
+      <ChevronRightIcon />
       <span className="sr-only">Next slide</span>
     </Button>
   );
