@@ -41,7 +41,7 @@ export function DeleteFactoryDialog(props: Props) {
           <AlertDialogTitle>Удалить завод?</AlertDialogTitle>
           <AlertDialogDescription>
             {factory
-              ? `Завод «${factory.name}» будет удалён без возможности восстановления.`
+              ? `Завод «${factory.prefix}» будет удалён без возможности восстановления.`
               : ""}
           </AlertDialogDescription>
         </AlertDialogHeader>

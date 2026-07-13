@@ -56,8 +56,11 @@ export function FactoryChart(props: Props) {
     <div className="flex min-h-0 flex-1 flex-col p-6 lg:p-10">
       <header className="mb-6 flex flex-col gap-1">
         <h1 className="text-2xl font-semibold tracking-tight text-foreground text-balance">
-          {factory.name}
+          {factory.prefix}
         </h1>
+        <p className="truncate text-sm text-muted-foreground">
+          {factory.folderPath}
+        </p>
       </header>
 
       <Card className="flex min-h-0 flex-1 flex-col overflow-hidden p-4 sm:p-6">

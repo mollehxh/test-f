@@ -2,7 +2,11 @@ import * as React from "react";
 import { Factory as FactoryIcon } from "lucide-react";
 
 import { FactoryChart } from "./factory-chart";
-import { INITIAL_FACTORIES, type Factory } from "../model/factory";
+import {
+  INITIAL_FACTORIES,
+  type Factory,
+  type FactoryInput,
+} from "../model/factory";
 import { FactorySidebar } from "./factory-sidebar/factory-sidebar";
 import { SidebarProvider } from "@/shared/ui/sidebar";
 
@@ -19,15 +23,13 @@ export function MainPage(props: Props) {
   const [activeId, setActiveId] = React.useState<string>(
     INITIAL_FACTORIES[0]?.id ?? "",
   );
-  const factoryNumberRef = React.useRef(INITIAL_FACTORIES.length);
-
   const activeFactory =
     factories.find((factory) => factory.id === activeId) ?? null;
 
-  const handleRename = (id: string, name: string) => {
+  const handleUpdate = (id: string, input: FactoryInput) => {
     setFactories((prev) =>
       prev.map((factory) =>
-        factory.id === id ? { ...factory, name } : factory,
+        factory.id === id ? { ...factory, ...input } : factory,
       ),
     );
   };
@@ -42,18 +44,14 @@ export function MainPage(props: Props) {
     });
   };
 
-  const handleAdd = () => {
-    factoryNumberRef.current += 1;
-
+  const handleAdd = (input: FactoryInput) => {
     const factory = {
       id: crypto.randomUUID(),
-      name: `Новый завод ${factoryNumberRef.current}`,
+      ...input,
     };
 
     setFactories((prev) => [...prev, factory]);
     setActiveId(factory.id);
-
-    return factory;
   };
 
   return (
@@ -62,7 +60,7 @@ export function MainPage(props: Props) {
         factories={factories}
         activeId={activeId}
         onSelect={setActiveId}
-        onRename={handleRename}
+        onUpdate={handleUpdate}
         onDelete={handleDelete}
         onAdd={handleAdd}
         onOpenSettings={onOpenSettings}

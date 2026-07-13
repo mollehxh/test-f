@@ -1,15 +1,34 @@
 export type Factory = {
   id: string;
-  name: string;
+  prefix: string;
+  folderPath: string;
 };
+
+export type FactoryInput = Omit<Factory, "id">;
 
 export const CHANNEL_COUNT = 300;
 
 export const INITIAL_FACTORIES: Factory[] = [
-  { id: "north", name: "Северный завод" },
-  { id: "west", name: "Западный завод" },
-  { id: "center", name: "Центральный цех" },
-  { id: "foundry", name: "Литейный завод" },
+  {
+    id: "north",
+    prefix: "NORTH",
+    folderPath: "C:\\FactoryFlow\\north",
+  },
+  {
+    id: "west",
+    prefix: "WEST",
+    folderPath: "C:\\FactoryFlow\\west",
+  },
+  {
+    id: "center",
+    prefix: "CENTER",
+    folderPath: "C:\\FactoryFlow\\center",
+  },
+  {
+    id: "foundry",
+    prefix: "FOUNDRY",
+    folderPath: "C:\\FactoryFlow\\foundry",
+  },
 ];
 
 export type SpectrumPoint = {

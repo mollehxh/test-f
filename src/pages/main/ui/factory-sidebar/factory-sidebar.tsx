@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Archive, MailCheck, Settings } from "lucide-react";
 
-import type { Factory } from "../../model/factory";
+import type { Factory, FactoryInput } from "../../model/factory";
 import {
   Sidebar,
   SidebarContent,
@@ -22,9 +22,9 @@ type Props = {
   factories: Factory[];
   activeId: string;
   onSelect: (id: string) => void;
-  onRename: (id: string, name: string) => void;
+  onUpdate: (id: string, input: FactoryInput) => void;
   onDelete: (id: string) => void;
-  onAdd: () => Factory;
+  onAdd: (input: FactoryInput) => void;
   onOpenSettings: () => void;
   onPreloadSettings: () => void;
   updateAvailable?: boolean;
@@ -35,7 +35,7 @@ export function FactorySidebar(props: Props) {
     factories,
     activeId,
     onSelect,
-    onRename,
+    onUpdate,
     onDelete,
     onAdd,
     onOpenSettings,
@@ -123,7 +123,7 @@ export function FactorySidebar(props: Props) {
           factories={factories}
           activeId={activeId}
           onSelect={onSelect}
-          onRename={onRename}
+          onUpdate={onUpdate}
           onDelete={onDelete}
           onAdd={onAdd}
         />

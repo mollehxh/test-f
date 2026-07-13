@@ -17,19 +17,19 @@ type Props = {
   factory: Factory;
   isActive: boolean;
   onSelect: (id: string) => void;
-  onRename: (factory: Factory) => void;
+  onEdit: (factory: Factory) => void;
   onDelete: (factory: Factory) => void;
 };
 
 export function FactoryListItem(props: Props) {
-  const { factory, isActive, onSelect, onRename, onDelete } = props;
+  const { factory, isActive, onSelect, onEdit, onDelete } = props;
 
   const handleSelect = () => {
     onSelect(factory.id);
   };
 
-  const handleRename = () => {
-    onRename(factory);
+  const handleEdit = () => {
+    onEdit(factory);
   };
 
   const handleDelete = () => {
@@ -43,14 +43,14 @@ export function FactoryListItem(props: Props) {
         isActive={isActive}
         aria-current={isActive ? "page" : undefined}
       >
-        <span>{factory.name}</span>
+        <span>{factory.prefix}</span>
       </SidebarMenuButton>
 
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
             <SidebarMenuAction
-              aria-label={`Меню завода ${factory.name}`}
+              aria-label={`Меню завода ${factory.prefix}`}
               showOnHover
               className="hover:bg-sidebar dark:hover:bg-white/10"
             >
@@ -59,9 +59,9 @@ export function FactoryListItem(props: Props) {
           }
         />
         <DropdownMenuContent side="right" align="start" className="w-44">
-          <DropdownMenuItem onClick={handleRename}>
+          <DropdownMenuItem onClick={handleEdit}>
             <Pencil className="size-4" />
-            Переименовать
+            Редактировать
           </DropdownMenuItem>
           <DropdownMenuItem variant="destructive" onClick={handleDelete}>
             <Trash2 className="size-4" />

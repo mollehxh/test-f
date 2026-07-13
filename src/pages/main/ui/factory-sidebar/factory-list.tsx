@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Plus } from "lucide-react";
 
-import type { Factory } from "../../model/factory";
+import type { Factory, FactoryInput } from "../../model/factory";
 import {
   SidebarGroup,
   SidebarGroupAction,
@@ -10,54 +10,47 @@ import {
   SidebarMenu,
 } from "@/shared/ui/sidebar";
 import { DeleteFactoryDialog } from "./delete-factory-dialog";
+import { FactoryFormDialog } from "./factory-form-dialog";
 import { FactoryListItem } from "./factory-list-item";
-import { FactoryRenameItem } from "./factory-rename-item";
 
 type Props = {
   factories: Factory[];
   activeId: string;
   onSelect: (id: string) => void;
-  onRename: (id: string, name: string) => void;
+  onUpdate: (id: string, input: FactoryInput) => void;
   onDelete: (id: string) => void;
-  onAdd: () => Factory;
+  onAdd: (input: FactoryInput) => void;
 };
 
 export const FactoryList = React.memo(function FactoryList(props: Props) {
-  const { factories, activeId, onSelect, onRename, onDelete, onAdd } = props;
+  const { factories, activeId, onSelect, onUpdate, onDelete, onAdd } = props;
 
-  const [editingId, setEditingId] = React.useState<string | null>(null);
-  const [draftName, setDraftName] = React.useState("");
+  const [editorMode, setEditorMode] = React.useState<"create" | "edit">(
+    "create",
+  );
+  const [editorTarget, setEditorTarget] = React.useState<Factory | null>(null);
+  const [editorOpen, setEditorOpen] = React.useState(false);
   const [deleteTarget, setDeleteTarget] = React.useState<Factory | null>(null);
-  const cancelRenameRef = React.useRef(false);
 
-  const startRename = (factory: Factory) => {
-    cancelRenameRef.current = false;
-    setEditingId(factory.id);
-    setDraftName(factory.name);
+  const openCreateDialog = () => {
+    setEditorMode("create");
+    setEditorTarget(null);
+    setEditorOpen(true);
   };
 
-  const handleAdd = () => {
-    startRename(onAdd());
+  const openEditDialog = (factory: Factory) => {
+    setEditorMode("edit");
+    setEditorTarget(factory);
+    setEditorOpen(true);
   };
 
-  const commitRename = () => {
-    if (!editingId) return;
-
-    if (cancelRenameRef.current) {
-      cancelRenameRef.current = false;
+  const handleSubmit = (input: FactoryInput) => {
+    if (editorMode === "edit" && editorTarget) {
+      onUpdate(editorTarget.id, input);
       return;
     }
 
-    const trimmed = draftName.trim();
-    if (trimmed) onRename(editingId, trimmed);
-    setEditingId(null);
-    setDraftName("");
-  };
-
-  const cancelRename = () => {
-    cancelRenameRef.current = true;
-    setEditingId(null);
-    setDraftName("");
+    onAdd(input);
   };
 
   const closeDeleteDialog = () => {
@@ -68,41 +61,36 @@ export const FactoryList = React.memo(function FactoryList(props: Props) {
     <>
       <SidebarGroup className="pt-3">
         <SidebarGroupLabel>Заводы</SidebarGroupLabel>
-        <SidebarGroupAction onClick={handleAdd} aria-label="Добавить завод">
+        <SidebarGroupAction
+          onClick={openCreateDialog}
+          aria-label="Добавить завод"
+        >
           <Plus />
         </SidebarGroupAction>
         <SidebarGroupContent>
           <SidebarMenu>
-            {factories.map((factory) => {
-              const isActive = factory.id === activeId;
-              const isEditing = factory.id === editingId;
-
-              if (isEditing) {
-                return (
-                  <FactoryRenameItem
-                    key={factory.id}
-                    value={draftName}
-                    onChange={setDraftName}
-                    onCommit={commitRename}
-                    onCancel={cancelRename}
-                  />
-                );
-              }
-
-              return (
-                <FactoryListItem
-                  key={factory.id}
-                  factory={factory}
-                  isActive={isActive}
-                  onSelect={onSelect}
-                  onRename={startRename}
-                  onDelete={setDeleteTarget}
-                />
-              );
-            })}
+            {factories.map((factory) => (
+              <FactoryListItem
+                key={factory.id}
+                factory={factory}
+                isActive={factory.id === activeId}
+                onSelect={onSelect}
+                onEdit={openEditDialog}
+                onDelete={setDeleteTarget}
+              />
+            ))}
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
+
+      <FactoryFormDialog
+        factory={editorTarget}
+        mode={editorMode}
+        open={editorOpen}
+        existingFactories={factories}
+        onOpenChange={setEditorOpen}
+        onSubmit={handleSubmit}
+      />
 
       <DeleteFactoryDialog
         factory={deleteTarget}
